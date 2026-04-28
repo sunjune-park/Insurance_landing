@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
     
     <style>
-        /* 기존 스타일 동일 (생략하지 않고 유지) */
+        /* ==================== Design System ==================== */
         :root {
             --primary: #059669; 
             --primary-dark: #047857;
@@ -25,8 +25,11 @@
             --shadow-floating: 0 -4px 16px rgba(0,0,0,0.1);
         }
 
+        /* ==================== Reset & Base ==================== */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; word-break: keep-all; }
+        ul, li { list-style: none; }
+        a { text-decoration: none; color: inherit; }
         
         #app {
             max-width: 480px;
@@ -39,6 +42,7 @@
             overflow-x: hidden;
         }
 
+        /* ==================== Typography & Utility ==================== */
         .text-center { text-align: center; }
         .text-primary { color: var(--primary); }
         .text-accent { color: var(--accent); }
@@ -75,9 +79,11 @@
             margin-bottom: 24px;
         }
 
+        /* ==================== Animations ==================== */
         .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
 
+        /* ==================== Header ==================== */
         header {
             padding: 16px 24px;
             border-bottom: 1px solid var(--border);
@@ -91,6 +97,7 @@
         }
         .logo { font-size: 1.125rem; font-weight: 800; color: var(--secondary); letter-spacing: -0.5px; }
 
+        /* ==================== Buttons ==================== */
         .btn {
             display: flex;
             align-items: center;
@@ -112,6 +119,7 @@
         }
         .btn-primary:active { transform: scale(0.98); background-color: var(--primary-dark); }
         
+        /* ==================== Hero Section ==================== */
         .hero { padding: 40px 24px 48px; }
         .hero h1 { font-size: 1.75rem; font-weight: 800; line-height: 1.3; letter-spacing: -1px; margin-bottom: 16px; color: var(--secondary); }
         .hero .sub-copy { font-size: 1rem; color: var(--text-sub); margin-bottom: 32px; }
@@ -119,6 +127,7 @@
         .trust-item { display: flex; flex-direction: column; align-items: center; font-size: 0.8125rem; color: var(--text-sub); font-weight: 500; }
         .trust-item svg { width: 24px; height: 24px; margin-bottom: 6px; fill: none; stroke: var(--primary); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
+        /* ==================== Interest Cards ==================== */
         .interest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .interest-card {
             background: var(--surface);
@@ -135,17 +144,20 @@
         .interest-icon { font-size: 1.5rem; margin-bottom: 8px; display: block; }
         .interest-text { font-size: 0.9375rem; font-weight: 600; color: var(--secondary); }
 
+        /* ==================== Info Summary ==================== */
         .summary-list { display: flex; flex-direction: column; gap: 12px; }
         .summary-item { display: flex; align-items: flex-start; background: var(--surface); padding: 16px; border-radius: 12px; border: 1px solid var(--border); }
         .summary-item .num { background: var(--surface-alt); color: var(--primary); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.875rem; margin-right: 12px; flex-shrink: 0; }
         .summary-item p { font-size: 0.9375rem; color: var(--text-main); font-weight: 500; margin-top: 3px; }
 
+        /* ==================== Social Proof ==================== */
         .review-card { background: var(--surface); padding: 20px; border-radius: 16px; box-shadow: var(--shadow-md); margin-bottom: 16px; border: 1px solid rgba(0,0,0,0.02); }
         .stars { color: #FBBF24; font-size: 1.125rem; margin-bottom: 8px; letter-spacing: 2px; }
         .review-text { font-size: 0.95rem; font-weight: 500; color: var(--secondary); margin-bottom: 12px; }
         .review-author { font-size: 0.8125rem; color: var(--text-sub); display: flex; align-items: center; }
         .review-author::before { content: ''; display: inline-block; width: 16px; height: 16px; background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="%23059669" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1.177-7.86l-2.765-2.767L6.65 12.78l4.173 4.174 7.904-7.905-1.408-1.408-6.496 6.496z"/></svg>') no-repeat center; margin-right: 4px; }
 
+        /* ==================== Form Section ==================== */
         .form-section { background: var(--surface-alt); border-top: 1px solid var(--border); }
         .form-card { background: var(--surface); padding: 24px; border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
         .input-group { margin-bottom: 16px; }
@@ -158,16 +170,34 @@
         .agree-wrap input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); margin-top: 2px; cursor: pointer; }
         .agree-wrap label { font-size: 0.8125rem; color: var(--text-sub); line-height: 1.5; cursor: pointer; }
 
+        /* ==================== Floating CTA ==================== */
         .floating-cta { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: calc(100% - 48px); max-width: 432px; z-index: 999; transition: opacity 0.3s, transform 0.3s; }
         .floating-cta.hidden { opacity: 0; pointer-events: none; transform: translate(-50%, 20px); }
 
+        /* Toast Modal */
         #toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(15, 23, 42, 0.9); color: white; padding: 20px 24px; border-radius: 12px; font-weight: 600; text-align: center; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 1000; box-shadow: var(--shadow-md); width: 80%; max-width: 320px; }
         #toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        
-        /* Netlify 스팸방지 허니팟 필드 숨김 처리 */
-        .hidden-field { display: none; }
+
+        /* Netlify Honeypot Hidden */
+        .bot-hidden { display: none; }
     </style>
-</head>
+
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1262157532145864');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1262157532145864&ev=PageView&noscript=1"
+    /></noscript>
+    </head>
 <body>
 
 <div id="app">
@@ -181,31 +211,75 @@
             <span class="badge accent">1분 체크</span>
             <h1>모르면 지나치기 쉬운<br><span class="text-primary">건강보장 정보,</span><br>지금 바로 확인해보세요</h1>
             <p class="sub-copy">병원비, 입원비, 생활 속 건강 관련 정보 중 내가 놓치고 있는 혜택이 있는지 간단히 확인해보세요.</p>
-            <button class="btn btn-primary" onclick="scrollToForm('기본 확인')">내 기준으로 바로 확인하기</button>
+            
+            <button class="btn btn-primary" onclick="scrollToForm('기본 확인')">
+                내 기준으로 바로 확인하기
+            </button>
+
+            <div class="trust-row">
+                <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>무료 확인</div>
+                <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>필수 정보만</div>
+                <div class="trust-item"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>안전한 처리</div>
+            </div>
         </section>
 
         <section class="section-padding bg-alt fade-up">
             <h2 class="section-title">어떤 정보가<br>가장 궁금하신가요?</h2>
+            <p class="section-desc">관심 항목을 선택하시면 맞춤형으로 알려드립니다.</p>
+            
             <div class="interest-grid">
-                <div class="interest-card" onclick="scrollToForm('입원/수술비')"><span class="interest-icon">🏥</span><span class="interest-text">입원/수술비 대비</span></div>
-                <div class="interest-card" onclick="scrollToForm('실손 외 보장')"><span class="interest-icon">🛡️</span><span class="interest-text">실손 외 보장</span></div>
-                <div class="interest-card" onclick="scrollToForm('자녀 건강 정보')"><span class="interest-icon">👶</span><span class="interest-text">자녀 건강 혜택</span></div>
-                <div class="interest-card" onclick="scrollToForm('부모님 병원비')"><span class="interest-icon">👵</span><span class="interest-text">부모님 병원비</span></div>
-                <div class="interest-card full-width" onclick="scrollToForm('전체 점검')"><span class="interest-icon">📋</span><span class="interest-text">내가 놓친 항목 전체 확인하기</span></div>
+                <div class="interest-card" onclick="scrollToForm('입원/수술비')">
+                    <span class="interest-icon">🏥</span>
+                    <span class="interest-text">입원/수술비 대비</span>
+                </div>
+                <div class="interest-card" onclick="scrollToForm('실손 외 보장')">
+                    <span class="interest-icon">🛡️</span>
+                    <span class="interest-text">실손 외 보장</span>
+                </div>
+                <div class="interest-card" onclick="scrollToForm('자녀 건강 정보')">
+                    <span class="interest-icon">👶</span>
+                    <span class="interest-text">자녀 건강 혜택</span>
+                </div>
+                <div class="interest-card" onclick="scrollToForm('부모님 병원비')">
+                    <span class="interest-icon">👵</span>
+                    <span class="interest-text">부모님 병원비</span>
+                </div>
+                <div class="interest-card full-width" onclick="scrollToForm('전체 점검')">
+                    <span class="interest-icon">📋</span>
+                    <span class="interest-text">내가 놓친 항목 전체 확인하기</span>
+                </div>
             </div>
+        </section>
+
+        <section class="section-padding fade-up">
+            <h2 class="section-title">왜 지금 확인해야 할까요?</h2>
+            <p class="section-desc">내 상황 기준으로 먼저 점검하는 것이 중요합니다.</p>
+            <div class="summary-list">
+                <div class="summary-item"><div class="num">1</div><p>겉보기엔 비슷해 보여도 내 상황에 맞는 <strong>실제 포인트는 다를 수 있습니다.</strong></p></div>
+                <div class="summary-item"><div class="num">2</div><p>병원 이용 후에야 아는 항목들이 있습니다. <strong>미리 체크하면 불필요한 지출을 줄입니다.</strong></p></div>
+                <div class="summary-item"><div class="num">3</div><p>아는 사람만 받아가는 <strong>필수 의료비 혜택</strong>만 한 번에 모아서 알려드립니다.</p></div>
+            </div>
+        </section>
+
+        <section class="section-padding bg-alt fade-up">
+            <h2 class="section-title">먼저 확인한 분들의 후기</h2>
+            <p class="section-desc">가입 강요 없이 최소 정보로 빠르게 확인 가능합니다.</p>
+            <div class="review-card"><div class="stars">★★★★★</div><p class="review-text">"어렵게 느껴졌는데, 내 기준으로 정리해서 보니까 이해가 너무 쉬웠어요. 생각보다 금방 확인되네요."</p><div class="review-author">30대 직장인 김*현 님</div></div>
+            <div class="review-card"><div class="stars">★★★★★</div><p class="review-text">"병원비 걱정이 많았는데, 놓치고 있던 부분이 있는지 한눈에 체크하는 데 큰 도움이 됐습니다."</p><div class="review-author">40대 자영업 이*진 님</div></div>
         </section>
 
         <section id="form-target" class="section-padding form-section fade-up">
             <div class="text-center mb-6" style="margin-bottom: 24px;">
                 <span class="badge accent">마지막 단계</span>
                 <h2 class="section-title text-center">내 기준으로 빠르게 확인하기</h2>
+                <p class="section-desc text-center">아래 정보만 남기면 관심 항목을 바로 확인해 드립니다.</p>
             </div>
 
             <div class="form-card">
                 <form id="dbForm" name="health-leads" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-                    <div class="hidden-field">
+                    <p class="bot-hidden">
                         <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
-                    </div>
+                    </p>
 
                     <div class="input-group">
                         <label for="userName">이름</label>
@@ -232,43 +306,66 @@
 
                     <div class="agree-wrap">
                         <input type="checkbox" id="privacyAgree" name="privacyAgree" required>
-                        <label for="privacyAgree">(필수) 개인정보 수집 및 이용, 제3자 제공에 동의합니다.</label>
+                        <label for="privacyAgree">
+                            (필수) 개인정보 수집 및 이용, 제3자 제공에 동의합니다. 안전한 상담 및 안내 목적으로만 사용됩니다.
+                        </label>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">무료로 확인 요청하기</button>
+                    <button type="submit" class="btn btn-primary">
+                        무료로 확인 요청하기
+                    </button>
                 </form>
             </div>
+        </section>
+        
+        <section class="section-padding text-center fade-up" style="padding-bottom: 80px;">
+            <h2 class="section-title">놓치기 전에<br>내 기준으로 확인해보세요</h2>
+            <div style="height: 16px;"></div>
+            <button class="btn btn-primary" style="background-color: var(--secondary); box-shadow: none;" onclick="scrollToForm('기본 확인')">
+                1분 체크 시작하기
+            </button>
         </section>
     </main>
 </div>
 
 <div class="floating-cta" id="floatingBtn">
-    <button class="btn btn-primary" onclick="scrollToForm('기본 확인')">🔍 1분 무료 확인하기</button>
+    <button class="btn btn-primary" onclick="scrollToForm('기본 확인')">
+        🔍 1분 무료 확인하기
+    </button>
 </div>
 
 <div id="toast">요청이 완료되었습니다.<br>빠르게 확인 후 안내해 드리겠습니다.</div>
 
 <script>
-    // 옵저버 및 스크롤 로직 유지
+    // 1. 스크롤 애니메이션 옵저버
+    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, observerOptions);
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
+    // 2. 폼 섹션 감지 (플로팅 버튼 제어)
+    const formSection = document.getElementById('form-target');
+    const floatingBtn = document.getElementById('floatingBtn');
+    const formObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) floatingBtn.classList.add('hidden');
+            else floatingBtn.classList.remove('hidden');
+        });
+    }, { threshold: 0.1 });
+    formObserver.observe(formSection);
+
+    // 3. 카드 클릭 시 값 연동 및 스크롤
     function scrollToForm(interestValue) {
         const select = document.getElementById('interestCategory');
         select.value = interestValue;
-        document.getElementById('form-target').scrollIntoView({ behavior: 'smooth' });
+        formSection.scrollIntoView({ behavior: 'smooth' });
         setTimeout(() => { document.getElementById('userName').focus(); }, 600);
     }
 
-    // 연락처 자동 하이픈
-    document.getElementById('userPhone').addEventListener('input', function (e) {
-        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,4})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
-
-    // 🎯 Netlify 폼 제출 로직 (AJAX 방식)
+    // 4. Netlify Form AJAX 전송 로직
     document.getElementById('dbForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -279,7 +376,7 @@
         btn.innerText = '처리 중...';
         btn.disabled = true;
 
-        // FormData를 URL-encoded 스트링으로 변환 (Netlify 요구사항)
+        // FormData를 URL-encoded로 변환
         const formData = new FormData(form);
         fetch("/", {
             method: "POST",
@@ -287,14 +384,16 @@
             body: new URLSearchParams(formData).toString()
         })
         .then(() => {
-            // 성공 시 토스트 메시지
+            // 성공 시 토스트 및 픽셀 이벤트
             const toast = document.getElementById('toast');
             toast.classList.add('show');
-            form.reset();
             
-            // 픽셀 이벤트 (필요 시)
-            if(typeof fbq === 'function') fbq('track', 'Lead');
+            // 페이스북 픽셀 'Lead' 이벤트 전송
+            if(typeof fbq === 'function') {
+                fbq('track', 'Lead');
+            }
 
+            form.reset();
             setTimeout(() => {
                 toast.classList.remove('show');
                 btn.innerText = originalText;
@@ -302,11 +401,18 @@
             }, 3000);
         })
         .catch(error => {
-            alert('오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            alert('전송 중 오류가 발생했습니다. 다시 시도해 주세요.');
             btn.innerText = originalText;
             btn.disabled = false;
         });
     });
+
+    // 5. 연락처 자동 하이픈(-)
+    document.getElementById('userPhone').addEventListener('input', function (e) {
+        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,4})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
 </script>
+
 </body>
 </html>

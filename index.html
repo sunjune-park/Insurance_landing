@@ -390,9 +390,9 @@
             const toast = document.getElementById('toast');
             toast.classList.add('show');
             
-            // 페이스북 픽셀 'Lead' 이벤트 전송
+            // 페이스북 픽셀 'CompleteRegistration' 이벤트 전송
             if(typeof fbq === 'function') {
-                fbq('track', 'Lead');
+                fbq('track', 'CompleteRegistration');
             }
 
             form.reset();

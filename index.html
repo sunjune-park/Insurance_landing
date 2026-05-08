@@ -275,7 +275,7 @@
                 <p class="section-desc text-center">아래 정보만 남기면 관심 항목을 바로 확인해 드립니다.</p>
             </div>
 
-            <div class="form-card">
+          <div class="form-card">
                 <form id="dbForm" name="health-leads" method="POST" data-netlify="true" netlify-honeypot="bot-field">
                     <input type="hidden" name="form-name" value="health-leads" />
 
@@ -318,6 +318,8 @@
                         </label>
                     </div>
 
+                    <input type="hidden" id="adSource" name="adSource" value="자연유입_또는_알수없음">
+
                     <button type="submit" class="btn btn-primary">
                         무료로 확인 요청하기
                     </button>
@@ -344,6 +346,14 @@
 <div id="toast">요청이 완료되었습니다.<br>빠르게 확인 후 안내해 드리겠습니다.</div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const adNameValue = urlParams.get('ad_name');
+        if(adNameValue) {
+            document.getElementById('adSource').value = adNameValue;
+        }
+    });
+
     // 1. 스크롤 애니메이션 옵저버
     const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
     const observer = new IntersectionObserver((entries) => {
@@ -401,6 +411,15 @@
             }
 
             form.reset();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const adNameValue = urlParams.get('ad_name');
+            if(adNameValue) {
+                document.getElementById('adSource').value = adNameValue;
+            } else {
+                document.getElementById('adSource').value = "자연유입_또는_알수없음";
+            }
+
             setTimeout(() => {
                 toast.classList.remove('show');
                 btn.innerText = originalText;

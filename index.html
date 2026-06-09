@@ -350,7 +350,9 @@
         const urlParams = new URLSearchParams(window.location.search);
         const adNameValue = urlParams.get('ad_name');
         if(adNameValue) {
-            document.getElementById('adSource').value = adNameValue;
+            // adSource 요소가 존재할 경우에만 값 설정 (에러 방지)
+            const adSourceEl = document.getElementById('adSource');
+            if (adSourceEl) adSourceEl.value = adNameValue;
         }
     });
 
@@ -364,81 +366,137 @@
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
     // 2. 폼 섹션 감지 (플로팅 버튼 제어)
-    const formSection = document.getElementById('form-target');
-    const floatingBtn = document.getElementById('floatingBtn');
-    const formObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) floatingBtn.classList.add('hidden');
-            else floatingBtn.classList.remove('hidden');
-        });
-    }, { threshold: 0.1 });
-    formObserver.observe(formSection);
+    const formSection = document.getElementById('form-target'); // 실제 HTML의 id와 일치하는지 확인 필요
+    const floatingBtn = document.getElementById('floatingBtn'); // 실제 HTML의 id와 일치하는지 확인 필요
+    if (formSection && floatingBtn) {
+        const formObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) floatingBtn.classList.add('hidden');
+                else floatingBtn.classList.remove('hidden');
+            });
+        }, { threshold: 0.1 });
+        formObserver.observe(formSection);
+    }
 
     // 3. 카드 클릭 시 값 연동 및 스크롤
     function scrollToForm(interestValue) {
-        const select = document.getElementById('interestCategory');
-        select.value = interestValue;
-        formSection.scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => { document.getElementById('userName').focus(); }, 600);
+        const select = document.getElementById('interestCategory'); // 실제 HTML의 id와 일치하는지 확인 필요
+        if (select) select.value = interestValue;
+        if (formSection) {
+            formSection.scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => { 
+                const userNameEl = document.getElementById('userName');
+                if (userNameEl) userNameEl.focus(); 
+            }, 600);
+        }
     }
 
-    // 4. Netlify Form AJAX 전송 로직
-    document.getElementById('dbForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const form = e.target;
-        const btn = form.querySelector('button[type="submit"]');
-        const originalText = btn.innerText;
-        
-        btn.innerText = '처리 중...';
-        btn.disabled = true;
-
-        // FormData를 URL-encoded로 변환
-        const formData = new FormData(form);
-        fetch("/", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(formData).toString()
-        })
-        .then(() => {
-            // 성공 시 토스트 및 픽셀 이벤트
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
+    // 4. Netlify Form AJAX 전송 로직 및 검증 (기존 dbForm / 현재 consultForm id 주의)
+    // HTML의 form id가 'dbForm'인지 'consultForm'인지 확인하여 맞춰주세요.
+    const targetForm = document.getElementById('dbForm') || document.getElementById('consultForm');
+    
+    if (targetForm) {
+        targetForm.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // 페이스북 픽셀 'CompleteRegistration' 이벤트 전송
-            if(typeof fbq === 'function') {
-                fbq('track', 'CompleteRegistration');
-            }
-
-            form.reset();
+            const form = e.target;
             
-            const urlParams = new URLSearchParams(window.location.search);
-            const adNameValue = urlParams.get('ad_name');
-            if(adNameValue) {
-                document.getElementById('adSource').value = adNameValue;
-            } else {
-                document.getElementById('adSource').value = "자연유입_또는_알수없음";
-            }
+            // --- [추가된 검증 로직 시작] ---
+            const nameEl = document.getElementById('userName');
+            const phoneEl = document.getElementById('userPhone');
+            const dobEl = document.getElementById('userDob');
+            
+            // 요소가 모두 존재할 때만 검증 수행
+            if (nameEl && phoneEl && dobEl) {
+                const name = nameEl.value;
+                const phone = phoneEl.value;
+                const dob = dobEl.value;
+                
+                // 1. 이름 검증 (완성형 한글 2자 이상만 허용. 영문, 숫자, 특수문자, 공백 차단)
+                const nameRegex = /^[가-힣]{2,}$/;
+                if(!nameRegex.test(name)) {
+                    alert('정확한 이름을 한글로만 입력해주세요. (영문, 특수문자, 공백 제외)');
+                    nameEl.focus();
+                    return; // 검증 실패 시 전송 중단
+                }
+                
+                // 2. 연락처 검증 (하이픈 포함/미포함 모두 허용, 일반적인 휴대폰 번호 형식)
+                const phoneRegex = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+                if(!phoneRegex.test(phone)) {
+                    alert('올바른 연락처 형식을 입력해주세요.\n(예: 010-1234-5678 또는 01012345678)');
+                    phoneEl.focus();
+                    return; // 검증 실패 시 전송 중단
+                }
 
-            setTimeout(() => {
-                toast.classList.remove('show');
+                // 3. 생년월일 검증 (숫자 6자리만 허용)
+                const dobRegex = /^[0-9]{6}$/;
+                if(!dobRegex.test(dob)) {
+                    alert('생년월일 6자리를 정확히 숫자로만 입력해주세요.\n(예: 720101)');
+                    dobEl.focus();
+                    return; // 검증 실패 시 전송 중단
+                }
+            }
+            // --- [추가된 검증 로직 끝] ---
+
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            
+            btn.innerText = '처리 중...';
+            btn.disabled = true;
+
+            // FormData를 URL-encoded로 변환
+            const formData = new FormData(form);
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            })
+            .then(() => {
+                // 성공 시 토스트 및 픽셀 이벤트
+                const toast = document.getElementById('toast');
+                if (toast) toast.classList.add('show');
+                
+                // 페이스북 픽셀 'CompleteRegistration' 이벤트 전송
+                if(typeof fbq === 'function') {
+                    fbq('track', 'CompleteRegistration');
+                }
+
+                form.reset();
+                
+                const urlParams = new URLSearchParams(window.location.search);
+                const adNameValue = urlParams.get('ad_name');
+                const adSourceEl = document.getElementById('adSource');
+                
+                if (adSourceEl) {
+                    if(adNameValue) {
+                        adSourceEl.value = adNameValue;
+                    } else {
+                        adSourceEl.value = "자연유입_또는_알수없음";
+                    }
+                }
+
+                setTimeout(() => {
+                    if (toast) toast.classList.remove('show');
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }, 3000);
+            })
+            .catch(error => {
+                alert('전송 중 오류가 발생했습니다. 다시 시도해 주세요.');
                 btn.innerText = originalText;
                 btn.disabled = false;
-            }, 3000);
-        })
-        .catch(error => {
-            alert('전송 중 오류가 발생했습니다. 다시 시도해 주세요.');
-            btn.innerText = originalText;
-            btn.disabled = false;
+            });
         });
-    });
+    }
 
     // 5. 연락처 자동 하이픈(-)
-    document.getElementById('userPhone').addEventListener('input', function (e) {
-        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,4})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
+    const phoneInput = document.getElementById('userPhone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function (e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,4})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+    }
 </script>
-
 </body>
 </html>

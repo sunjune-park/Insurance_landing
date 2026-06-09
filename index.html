@@ -290,7 +290,7 @@
 
                     <div class="input-group">
                         <label for="userBirth">생년월일</label>
-                        <input type="text" id="userBirth" name="userBirth" class="input-control" placeholder="예) 900101 (6자리)" maxlength="8" required>
+                        <input type="text" id="userBirth" name="userBirth" class="input-control" placeholder="예) 900101 (6자리)" maxlength="6" required>
                     </div>
                     
                     <div class="input-group">
@@ -366,8 +366,8 @@
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
     // 2. 폼 섹션 감지 (플로팅 버튼 제어)
-    const formSection = document.getElementById('form-target'); // 실제 HTML의 id와 일치하는지 확인 필요
-    const floatingBtn = document.getElementById('floatingBtn'); // 실제 HTML의 id와 일치하는지 확인 필요
+    const formSection = document.getElementById('form-target');
+    const floatingBtn = document.getElementById('floatingBtn');
     if (formSection && floatingBtn) {
         const formObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -380,7 +380,7 @@
 
     // 3. 카드 클릭 시 값 연동 및 스크롤
     function scrollToForm(interestValue) {
-        const select = document.getElementById('interestCategory'); // 실제 HTML의 id와 일치하는지 확인 필요
+        const select = document.getElementById('interestCategory');
         if (select) select.value = interestValue;
         if (formSection) {
             formSection.scrollIntoView({ behavior: 'smooth' });
@@ -391,20 +391,15 @@
         }
     }
 
-    // 4. Netlify Form AJAX 전송 로직 및 검증 (기존 dbForm / 현재 consultForm id 주의)
-    // HTML의 form id가 'dbForm'인지 'consultForm'인지 확인하여 맞춰주세요.
-    const targetForm = document.getElementById('dbForm') || document.getElementById('consultForm');
+    // 4. Netlify Form AJAX 전송 로직 및 강력한 검증
+    const targetForm = document.getElementById('dbForm');
     
     if (targetForm) {
         targetForm.addEventListener('submit', function(e) {
-            e.preventDefault();
             
-            const form = e.target;
-            
-            // --- [추가된 검증 로직 시작] ---
             const nameEl = document.getElementById('userName');
             const phoneEl = document.getElementById('userPhone');
-            const dobEl = document.getElementById('userDob');
+            const dobEl = document.getElementById('userBirth');
             
             // 요소가 모두 존재할 때만 검증 수행
             if (nameEl && phoneEl && dobEl) {
@@ -412,40 +407,48 @@
                 const phone = phoneEl.value;
                 const dob = dobEl.value;
                 
-                // 1. 이름 검증 (완성형 한글 2자 이상만 허용. 영문, 숫자, 특수문자, 공백 차단)
+                // 1. 이름 검증 (완성형 한글 2자 이상만 허용)
                 const nameRegex = /^[가-힣]{2,}$/;
                 if(!nameRegex.test(name)) {
+                    e.preventDefault(); // 기본 전송 차단
+                    e.stopImmediatePropagation(); // 추가 이벤트 실행 차단
                     alert('정확한 이름을 한글로만 입력해주세요. (영문, 특수문자, 공백 제외)');
                     nameEl.focus();
-                    return; // 검증 실패 시 전송 중단
+                    return false; 
                 }
                 
-                // 2. 연락처 검증 (하이픈 포함/미포함 모두 허용, 일반적인 휴대폰 번호 형식)
-                const phoneRegex = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-                if(!phoneRegex.test(phone)) {
-                    alert('올바른 연락처 형식을 입력해주세요.\n(예: 010-1234-5678 또는 01012345678)');
-                    phoneEl.focus();
-                    return; // 검증 실패 시 전송 중단
-                }
-
-                // 3. 생년월일 검증 (숫자 6자리만 허용)
+                // 2. 생년월일 검증 (숫자 6자리만 허용)
                 const dobRegex = /^[0-9]{6}$/;
                 if(!dobRegex.test(dob)) {
-                    alert('생년월일 6자리를 정확히 숫자로만 입력해주세요.\n(예: 720101)');
+                    e.preventDefault(); // 기본 전송 차단
+                    e.stopImmediatePropagation(); // 추가 이벤트 실행 차단
+                    alert('생년월일 6자리를 정확히 숫자로만 입력해주세요.\n(예: 900101)');
                     dobEl.focus();
-                    return; // 검증 실패 시 전송 중단
+                    return false; 
+                }
+                
+                // 3. 연락처 검증 (하이픈 포함/미포함 모두 허용)
+                const phoneRegex = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+                if(!phoneRegex.test(phone)) {
+                    e.preventDefault(); // 기본 전송 차단
+                    e.stopImmediatePropagation(); // 추가 이벤트 실행 차단
+                    alert('올바른 연락처 형식을 입력해주세요.\n(예: 010-1234-5678 또는 01012345678)');
+                    phoneEl.focus();
+                    return false; 
                 }
             }
-            // --- [추가된 검증 로직 끝] ---
-
-            const btn = form.querySelector('button[type="submit"]');
+            
+            // 검증 통과 시 Netlify 기본 전송을 막고 AJAX로 처리
+            e.preventDefault(); 
+            
+            const btn = targetForm.querySelector('button[type="submit"]');
             const originalText = btn.innerText;
             
             btn.innerText = '처리 중...';
             btn.disabled = true;
 
             // FormData를 URL-encoded로 변환
-            const formData = new FormData(form);
+            const formData = new FormData(targetForm);
             fetch("/", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -461,7 +464,7 @@
                     fbq('track', 'CompleteRegistration');
                 }
 
-                form.reset();
+                targetForm.reset();
                 
                 const urlParams = new URLSearchParams(window.location.search);
                 const adNameValue = urlParams.get('ad_name');
